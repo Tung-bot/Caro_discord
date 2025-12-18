@@ -37,54 +37,15 @@ for (const file of commandFiles) {
 
 client.on(Events.InteractionCreate, async interaction => {
 
-    const human1 = games.player1 = interaction.user.id;
-
-    // đoạn này là bấm nút check xem lỗi không
-    if (interaction.isButton()) {
-        await interaction.deferReply({ ephemeral: true });
-
-        // check xem có trùng player 1 không
-        if (interaction.user.id === human1) {
-            console.log(interaction.user.id);
-            return interaction.editReply("❌ Bạn đã là Player 1 rồi");   
-        };
-    }
-
-    // ===== BUTTON =====
     if (!interaction.isButton()) return;
-    if (!interaction.customId.startsWith("caro_join_")) return;
-    
-    // ACK NGAY để Discord không timeout
+    console.log(interaction);
+
+    if (interaction.commandName === Caro) {
+        const player2 = interaction.channelId
+    }
+    // if (!interaction.customId.startsWith("caro_join_")) return;
+
     await interaction.deferReply({ ephemeral: true });
-    const gameId = interaction.customId.replace("caro_join_", "");
-    const game = games.get(gameId);
-
-    console.log("chạy đến đây rồi!");
-
-
-    if (!game) {
-        return interaction.editReply("❌ Trận đã bị hủy hoặc không tồn tại");
-    }
-    
-    // Đã có Player 2
-    if (game.player2) {
-        return interaction.editReply("❌ Trận đã đủ người");
-    }
-
-    // Join thành công
-    game.player2 = interaction.user.id;
-    game.turn = game.player1;
-
-    await interaction.message.edit({
-        content:
-            `🎮 **Trận cờ caro**\n\n` +
-            `❌ Player 1: <@${game.player1}>\n` +
-            `⭕ Player 2: <@${game.player2}>\n\n` +
-            `⏳ Lượt đi: <@${game.turn}>`,
-        components: []
-    });
-
-    await interaction.editReply("✅ Bạn đã tham gia làm Player 2");
 });
 
 // ===== DEPLOY COMMANDS =====
